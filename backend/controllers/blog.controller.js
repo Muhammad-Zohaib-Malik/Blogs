@@ -10,6 +10,8 @@ export const createBlog = async (req, res) => {
     const { title, description, draft } = req.body;
     const image = req.file;
 
+    console.log("Received file:", image);
+
     // Check for each field and return a specific error message if any are missing
     if (!title) {
       return res.status(400).json({ message: 'Title is required' });

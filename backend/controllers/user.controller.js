@@ -49,8 +49,6 @@ export const signin = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-
-
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -67,10 +65,16 @@ export const signin = async (req, res) => {
       }
     });
 
-
-
   } catch (error) {
     res.status(500).json({ message: 'Error signing in', error: error.message });
   }
 };
 
+// export const logout = async (req, res) => {
+//   try {
+
+//   } catch (error) {
+
+//   }
+
+// }
