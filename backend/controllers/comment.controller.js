@@ -14,14 +14,12 @@ export const addComment = async (req, res) => {
       return res.status(400).json({ message: "Comment is required" });
     }
 
-    // Create the new comment
     const newComment = await Comment.create({
       comment,
       blog: blogId,
       user: creator,
     });
 
-    // Push the new comment ID into the blog's comment array
     await Blog.findByIdAndUpdate(blogId, {
       $push: { comments: newComment._id },
     });
@@ -34,7 +32,7 @@ export const addComment = async (req, res) => {
 
 export const deleteComment = async (req, res) => {
   try {
-    const userId = req.user; // Ensure this is the user's ID
+    const userId = req.user;
     const commentId = req.params.id;
 
     const comment = await Comment.findById(commentId);
@@ -62,7 +60,7 @@ export const deleteComment = async (req, res) => {
 export const editComment = async (req, res) => {
   try {
     const { updateComment } = req.body;
-    const userId = req.user; // Ensure this is the user's ID
+    const userId = req.user;
     const commentId = req.params.id;
 
     const comment = await Comment.findById(commentId);
@@ -70,16 +68,14 @@ export const editComment = async (req, res) => {
       return res.status(404).json({ message: "Comment not found" });
     }
 
-    // Check if the user is authorized to edit the comment
     if (comment.user.toString() !== userId) {
       return res
         .status(403)
         .json({ message: "You are not authorized to edit this comment" });
     }
 
-    // Update the comment with new content
-    comment.comment = updateComment; // Update the comment content
-    await comment.save(); // Save the updated comment
+    comment.comment = updateComment;
+    await comment.save();
 
     res.status(200).json({ message: "Comment updated successfully", comment });
   } catch (error) {
@@ -89,7 +85,7 @@ export const editComment = async (req, res) => {
 
 export const likeCommentAndDislikeComment = async (req, res) => {
   try {
-    const userId = req.user; // Ensure this is the user's ID
+    const userId = req.user;
     const commentId = req.params.id;
 
     const comment = await Comment.findById(commentId);
