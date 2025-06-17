@@ -1,6 +1,4 @@
-import mongoose from 'mongoose';
-
-mongoose.set('strictQuery', true);
+import mongoose from "mongoose";
 
 export const connectDB = async () => {
   try {
@@ -8,7 +6,6 @@ export const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
-    throw error; // Throw the error so it can be caught in server.js
+    process.exit(1);
   }
 };
-

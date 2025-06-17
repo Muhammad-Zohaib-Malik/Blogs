@@ -1,18 +1,15 @@
-import { v2 as cloudinary } from 'cloudinary'
+import { v2 as cloudinary } from "cloudinary";
 
 export const cloudinaryConfig = async () => {
   try {
     await cloudinary.config({
-      cloud_name: 'dmyf0syin',
-      api_key: "924415157651735",
-      api_secret: '6GxnsJVo3J-KGyTIuBtKKT1ubW4'
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
     });
-    console.log('cloudianry configuration successfully')
-
+    console.log("cloudinary configuration successfully");
   } catch (error) {
-    console.log('error while configure config cloudinary')
-    console.log(error)
-
+    console.log("error while configure config cloudinary");
+    console.log(error);
   }
-
-}
+};

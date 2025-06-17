@@ -1,10 +1,10 @@
-import Blog from '../models/blog.model.js';
-import Comment from '../models/comment.model.js';
+import Blog from "../models/blog.model.js";
+import Comment from "../models/comment.model.js";
 
 export const addComment = async (req, res) => {
   try {
     const { comment } = req.body;
-    const creator = req.user; // Ensure this is correctly set as a user ID
+    const creator = req.user;
     const blogId = req.params.id;
 
     const blog = await Blog.findById(blogId);
@@ -15,10 +15,16 @@ export const addComment = async (req, res) => {
     }
 
     // Create the new comment
-    const newComment = await Comment.create({ comment, blog: blogId, user: creator });
+    const newComment = await Comment.create({
+      comment,
+      blog: blogId,
+      user: creator,
+    });
 
     // Push the new comment ID into the blog's comment array
-    await Blog.findByIdAndUpdate(blogId, { $push: { comments: newComment._id } });
+    await Blog.findByIdAndUpdate(blogId, {
+      $push: { comments: newComment._id },
+    });
 
     res.status(201).json({ message: "Comment added successfully", newComment });
   } catch (error) {
@@ -35,11 +41,16 @@ export const deleteComment = async (req, res) => {
     if (!comment) return res.status(404).json({ message: "Comment not found" });
 
     // Check if the user is authorized to delete the comment
-    if (comment.user.toString() !== userId && comment.blog.creater.toString() !== userId) {
+    if (
+      comment.user.toString() !== userId &&
+      comment.blog.creater.toString() !== userId
+    ) {
       return res.status(403).json({ message: "You are not authorized" });
     }
 
-    await Blog.findByIdAndUpdate(comment.blog._id, { $pull: { comments: commentId } });
+    await Blog.findByIdAndUpdate(comment.blog._id, {
+      $pull: { comments: commentId },
+    });
     await Comment.findByIdAndDelete(commentId);
 
     res.status(200).json({ message: "Comment deleted successfully" });
@@ -61,7 +72,9 @@ export const editComment = async (req, res) => {
 
     // Check if the user is authorized to edit the comment
     if (comment.user.toString() !== userId) {
-      return res.status(403).json({ message: "You are not authorized to edit this comment" });
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to edit this comment" });
     }
 
     // Update the comment with new content
@@ -73,7 +86,6 @@ export const editComment = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 export const likeCommentAndDislikeComment = async (req, res) => {
   try {
